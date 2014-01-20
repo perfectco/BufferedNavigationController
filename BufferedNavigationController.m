@@ -29,18 +29,26 @@
 - (void)dealloc {
     [self.stack removeAllObjects];
     self.stack = nil;
-    
-    [super dealloc];
 }
 
 - (id)init {
     self = [super init];
     if (self) {
         self.delegate = self;
-        self.stack = [[[NSMutableArray alloc] init] autorelease];
+        self.stack = [[NSMutableArray alloc] init];
     }
     
     return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+  self = [super initWithCoder:aDecoder];
+  if (self) {
+    self.delegate = self;
+    self.stack = [[NSMutableArray alloc] init];
+  }
+  return self;
 }
 
 - (UIViewController *)popViewControllerAnimated:(BOOL)animated {
@@ -50,8 +58,6 @@
                 [super popViewControllerAnimated:animated];
             } copy];
             [self.stack addObject:codeBlock];
-            [codeBlock release];
-            
             // We cannot show what viewcontroller is currently animated now
             return nil;
         } else {
@@ -70,7 +76,6 @@
             
             // Add to the stack list and then release
             [self.stack addObject:codeBlock];
-            [codeBlock release];
         } else {
             [super setViewControllers:viewControllers animated:animated];
         }
@@ -79,8 +84,6 @@
 
 - (void) pushCodeBlock:(void (^)())codeBlock{
     @synchronized(self.stack) {
-        [self.stack addObject:[[codeBlock copy] autorelease]];
-        
         if (!self.transitioning)
             [self runNextBlock];
     }
@@ -93,7 +96,6 @@
                 [super pushViewController:viewController animated:animated];
             } copy];
             [self.stack addObject:codeBlock];
-            [codeBlock release];
         } else {
             [super pushViewController:viewController animated:animated];
         }
