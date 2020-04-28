@@ -25,7 +25,7 @@
 
 @interface BufferedNavigationController : UINavigationController <UINavigationControllerDelegate>
 
-- (void) pushCodeBlock:(void (^)())codeBlock;
+- (void) pushCodeBlock:(void (^)(void))codeBlock;
 - (void) runNextBlock;
 
 @property (nonatomic, retain) NSMutableArray* stack;

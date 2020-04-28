@@ -82,7 +82,7 @@
     }
 }
 
-- (void) pushCodeBlock:(void (^)())codeBlock{
+- (void) pushCodeBlock:(void (^)(void))codeBlock{
     @synchronized(self.stack) {
         if (!self.transitioning)
             [self runNextBlock];
